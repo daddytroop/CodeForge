@@ -14,11 +14,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm' # Speeds up subsequent runs
 
-      - name: Install dependencies
-        run: npm install
+      - name: Clean and Install dependencies
+        run: |
+          rm -rf node_modules
+          npm install
 
       - name: Build Mac DMG
+        # We explicitly run this from the root to fix the "CodeForge/CodeForge" path error
         run: npx electron-builder --mac
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,6 +43,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install
@@ -52,4 +57,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: CodeForge-Windows
-          path: dist/CodeForge Setup 1.0.0.exe
+          path: dist/CodeForge-Setup.exe
