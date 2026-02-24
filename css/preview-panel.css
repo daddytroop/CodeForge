@@ -1,0 +1,223 @@
+/* ===== Preview Panel ===== */
+#preview-panel {
+  width: var(--ai-panel-width);
+  min-width: 280px;
+  max-width: 70vw;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+#preview-panel.hidden {
+  display: none;
+}
+
+#preview-resize-handle {
+  position: absolute;
+  left: -3px;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: col-resize;
+  z-index: 10;
+}
+
+#preview-resize-handle:hover {
+  background: var(--accent);
+  opacity: 0.3;
+}
+
+/* Header */
+.preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.preview-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.5px;
+}
+
+.preview-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.preview-action-btn {
+  color: var(--text-muted);
+}
+
+.preview-action-btn:hover {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+#preview-mode-select {
+  padding: 2px 6px;
+  font-size: 11px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  color: var(--text-primary);
+  outline: none;
+  cursor: pointer;
+}
+
+/* Toolbar */
+.preview-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 10px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  flex-shrink: 0;
+}
+
+.preview-url-bar {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 3px 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+  overflow: hidden;
+}
+
+.preview-url-icon {
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+#preview-url-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.preview-responsive-btns {
+  display: flex;
+  gap: 2px;
+}
+
+.preview-device-btn {
+  padding: 3px 6px;
+  border-radius: var(--radius);
+}
+
+.preview-device-btn.active {
+  background: var(--accent-muted);
+  color: var(--accent);
+}
+
+/* iframe container */
+#preview-container {
+  flex: 1;
+  position: relative;
+  background: #fff;
+  overflow: hidden;
+}
+
+#preview-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+  display: block;
+}
+
+#preview-iframe.tablet-view {
+  max-width: 768px;
+  margin: 0 auto;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+}
+
+#preview-iframe.mobile-view {
+  max-width: 375px;
+  margin: 0 auto;
+  border-left: 1px solid var(--border-color);
+  border-right: 1px solid var(--border-color);
+}
+
+/* Empty state */
+#preview-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  text-align: center;
+  padding: 20px;
+}
+
+#preview-empty.hidden {
+  display: none;
+}
+
+.preview-empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+#preview-empty p {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.preview-empty-hint {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 8px;
+}
+
+/* Console overlay */
+.preview-console {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 150px;
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  display: none;
+}
+
+.preview-console.open {
+  display: block;
+}
+
+.preview-console-entry {
+  padding: 2px 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.preview-console-entry.error {
+  color: var(--danger);
+  background: rgba(249, 38, 114, 0.05);
+}
+
+.preview-console-entry.warn {
+  color: var(--warning);
+}

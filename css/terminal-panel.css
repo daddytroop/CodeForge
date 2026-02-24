@@ -1,0 +1,221 @@
+/* ===== Terminal Panel (Bottom) ===== */
+#terminal-panel {
+  height: var(--terminal-panel-height, 250px);
+  min-height: 120px;
+  max-height: 70vh;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+#terminal-panel.hidden {
+  display: none;
+}
+
+/* Resize Handle (top edge) */
+#terminal-resize-handle {
+  position: absolute;
+  top: -3px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: row-resize;
+  z-index: 10;
+}
+
+#terminal-resize-handle:hover {
+  background: var(--accent);
+  opacity: 0.3;
+}
+
+/* Terminal Header */
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 8px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-secondary);
+  flex-shrink: 0;
+  height: 32px;
+  min-height: 32px;
+}
+
+.terminal-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  overflow: hidden;
+}
+
+.terminal-panel-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Terminal Tabs */
+.terminal-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+
+.terminal-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.terminal-tab {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+
+.terminal-tab:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.terminal-tab.active {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.terminal-tab-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 10px;
+  color: var(--text-muted);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.terminal-tab:hover .terminal-tab-close {
+  opacity: 1;
+}
+
+.terminal-tab-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+}
+
+/* Terminal Actions */
+.terminal-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.terminal-actions .icon-btn {
+  padding: 2px 4px;
+  font-size: 14px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.terminal-actions .icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* Terminal Container */
+.terminal-container-wrap {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.terminal-instance {
+  position: absolute;
+  inset: 0;
+  display: none;
+  padding: 4px 0 0 4px;
+}
+
+.terminal-instance.active {
+  display: block;
+}
+
+/* Make xterm.js fill the container */
+.terminal-instance .xterm {
+  height: 100%;
+}
+
+.terminal-instance .xterm-viewport {
+  overflow-y: auto !important;
+}
+
+/* Browser Fallback */
+.terminal-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  text-align: center;
+  padding: 20px;
+}
+
+.terminal-fallback.hidden {
+  display: none;
+}
+
+.terminal-fallback-icon {
+  font-size: 36px;
+  margin-bottom: 10px;
+}
+
+.terminal-fallback p {
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.terminal-fallback .hint {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 6px;
+}
+
+/* xterm.js theme overrides — sync with CodeForge themes */
+.terminal-instance .xterm {
+  font-family: var(--font-mono);
+}
+
+/* Selection color */
+.terminal-instance .xterm .xterm-selection div {
+  background: rgba(255, 255, 255, 0.15) !important;
+}

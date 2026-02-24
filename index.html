@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeForge — AI-Powered Code Editor</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/ai-panel.css">
+  <link rel="stylesheet" href="css/preview-panel.css">
+  <link rel="stylesheet" href="css/sql-panel.css">
+  <link rel="stylesheet" href="css/terminal-panel.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+  <!-- Title Bar -->
+  <div id="titlebar">
+    <div class="titlebar-left">
+      <div class="menu-items">
+        <div class="menu-item" data-menu="file">File</div>
+        <div class="menu-item" data-menu="edit">Edit</div>
+        <div class="menu-item" data-menu="view">View</div>
+        <div class="menu-item" data-menu="selection">Selection</div>
+        <div class="menu-item" data-menu="help">Help</div>
+      </div>
+    </div>
+    <div class="titlebar-center">
+      <span id="titlebar-filename">CodeForge</span>
+    </div>
+    <div class="titlebar-right">
+      <button class="titlebar-btn" id="btn-settings" title="Settings (Ctrl+,)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 4.754a3.246 3.246 0 100 6.492 3.246 3.246 0 000-6.492zM5.754 8a2.246 2.246 0 114.492 0 2.246 2.246 0 01-4.492 0z"/><path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 01-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 01-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 01.52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 011.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 011.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 01.52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 01-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 01-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 002.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 001.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 00-1.115 2.693l.16.291c.415.764-.421 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 00-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 00-2.692-1.115l-.292.16c-.764.415-1.6-.421-1.184-1.185l.159-.291A1.873 1.873 0 001.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 003.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 002.692-1.115l.094-.319z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Layout -->
+  <div id="main-container">
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title" id="sidebar-title">EXPLORER</span>
+        <div class="sidebar-actions">
+          <button class="icon-btn" id="btn-open-folder" title="Open Folder">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3.5A1.5 1.5 0 012.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0115 5.5v7a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 011 12.5v-9zM2.5 3a.5.5 0 00-.5.5v9a.5.5 0 00.5.5h11a.5.5 0 00.5-.5v-7a.5.5 0 00-.5-.5H9c-.964 0-1.71-.486-2.342-1.159A1.636 1.636 0 005.264 3H2.5z"/></svg>
+          </button>
+          <button class="icon-btn" id="btn-new-file" title="New File">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1v6H2v2h6v6h2V9h6V7H10V1z"/></svg>
+          </button>
+          <button class="icon-btn hidden" id="btn-close-folder" title="Close Folder">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 01.708 0L8 7.293l2.646-2.647a.5.5 0 01.708.708L8.707 8l2.647 2.646a.5.5 0 01-.708.708L8 8.707l-2.646 2.647a.5.5 0 01-.708-.708L7.293 8 4.646 5.354a.5.5 0 010-.708z"/></svg>
+          </button>
+        </div>
+      </div>
+      <div id="folder-tree" class="hidden"></div>
+      <div id="file-tree">
+        <div class="file-tree-empty">
+          <p>No files open</p>
+          <p class="hint">Ctrl+N to create a new file</p>
+          <p class="hint">Ctrl+O to open a file</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editor Area -->
+    <div id="editor-area">
+      <!-- Tabs -->
+      <div id="tab-bar">
+        <div id="tabs-container"></div>
+      </div>
+
+      <!-- Editor + AI Panel wrapper -->
+      <div id="editor-wrapper">
+        <!-- Code Editor -->
+        <div id="editor-pane">
+          <div id="editor-container">
+            <div id="cm-host"></div>
+            <!-- Welcome Screen -->
+            <div id="welcome-screen">
+              <div class="welcome-content">
+                <h1 class="welcome-logo">⚡ CodeForge</h1>
+                <p class="welcome-subtitle">AI-Powered Code Editor</p>
+                <div class="welcome-shortcuts">
+                  <div class="shortcut-group">
+                    <h3>Start</h3>
+                    <div class="shortcut-item"><kbd>Ctrl+N</kbd><span>New File</span></div>
+                    <div class="shortcut-item"><kbd>Ctrl+O</kbd><span>Open File</span></div>
+                    <div class="shortcut-item"><kbd>Ctrl+Shift+P</kbd><span>Command Palette</span></div>
+                  </div>
+                  <div class="shortcut-group">
+                    <h3>AI Assistant</h3>
+                    <div class="shortcut-item"><kbd>Ctrl+L</kbd><span>Toggle AI Panel</span></div>
+                    <div class="shortcut-item"><kbd>Ctrl+,</kbd><span>Settings / API Keys</span></div>
+                    <div class="shortcut-item"><kbd>Ctrl+K</kbd><span>AI Edit Selection</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Minimap -->
+          <div id="minimap" class="hidden"></div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div id="preview-panel" class="hidden">
+          <div id="preview-resize-handle"></div>
+          <div class="preview-header">
+            <span class="preview-title">Preview</span>
+            <div class="preview-actions">
+              <button class="icon-btn preview-action-btn" id="btn-preview-refresh" title="Refresh (Ctrl+Shift+R)">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M11.534 7h3.932a.25.25 0 01.192.41l-1.966 2.36a.25.25 0 01-.384 0l-1.966-2.36a.25.25 0 01.192-.41zm-11 2h3.932a.25.25 0 00.192-.41L2.692 6.23a.25.25 0 00-.384 0L.342 8.59A.25.25 0 00.534 9z"/><path d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 11-.771-.636A6.002 6.002 0 0113.917 7H12.9A5.002 5.002 0 008 3zM3.1 9a5.002 5.002 0 008.757 2.182.5.5 0 11.771.636A6.002 6.002 0 012.083 9H3.1z"/></svg>
+              </button>
+              <button class="icon-btn preview-action-btn" id="btn-preview-external" title="Open in New Window">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8.636 3.5a.5.5 0 00-.5-.5H1.5A1.5 1.5 0 000 4.5v10A1.5 1.5 0 001.5 16h10a1.5 1.5 0 001.5-1.5V7.864a.5.5 0 00-1 0V14.5a.5.5 0 01-.5.5h-10a.5.5 0 01-.5-.5v-10a.5.5 0 01.5-.5h6.636a.5.5 0 00.5-.5z"/><path d="M16 .5a.5.5 0 00-.5-.5h-5a.5.5 0 000 1h3.793L6.146 9.146a.5.5 0 10.708.708L15 1.707V5.5a.5.5 0 001 0v-5z"/></svg>
+              </button>
+              <select id="preview-mode-select" title="Preview Mode">
+                <option value="auto">Auto</option>
+                <option value="html">HTML</option>
+                <option value="markdown">Markdown</option>
+                <option value="browser">Browser</option>
+              </select>
+              <button class="icon-btn" id="btn-close-preview" title="Close Preview">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 01.708 0L8 7.293l2.646-2.647a.5.5 0 01.708.708L8.707 8l2.647 2.646a.5.5 0 01-.708.708L8 8.707l-2.646 2.647a.5.5 0 01-.708-.708L7.293 8 4.646 5.354a.5.5 0 010-.708z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="preview-toolbar">
+            <div class="preview-url-bar">
+              <span class="preview-url-icon">🌐</span>
+              <span id="preview-url-text">about:blank</span>
+            </div>
+            <div class="preview-responsive-btns">
+              <button class="icon-btn preview-device-btn active" data-device="desktop" title="Desktop">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M0 4s0-2 2-2h12s2 0 2 2v6s0 2-2 2h-4c0 .667.083 1.167.25 1.5H11a.5.5 0 010 1H5a.5.5 0 010-1h.75c.167-.333.25-.833.25-1.5H2s-2 0-2-2V4zm1.398-.855a.758.758 0 00-.254.302A1.46 1.46 0 001 4.01V10c0 .325.078.502.145.602.07.105.17.188.302.254a1.464 1.464 0 00.538.143L2.01 11H14c.325 0 .502-.078.602-.145a.758.758 0 00.254-.302 1.464 1.464 0 00.143-.538L15 9.99V4c0-.325-.078-.502-.145-.602a.757.757 0 00-.302-.254A1.46 1.46 0 0013.99 3H2c-.325 0-.502.078-.602.145z"/></svg>
+              </button>
+              <button class="icon-btn preview-device-btn" data-device="tablet" title="Tablet">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M12 1a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V2a1 1 0 011-1h8zM4 0a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V2a2 2 0 00-2-2H4z"/><path d="M8 14a1 1 0 100-2 1 1 0 000 2z"/></svg>
+              </button>
+              <button class="icon-btn preview-device-btn" data-device="mobile" title="Mobile">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M11 1a1 1 0 011 1v12a1 1 0 01-1 1H5a1 1 0 01-1-1V2a1 1 0 011-1h6zM5 0a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V2a2 2 0 00-2-2H5z"/><path d="M8 14a1 1 0 100-2 1 1 0 000 2z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div id="preview-container">
+            <iframe id="preview-iframe" sandbox="allow-scripts allow-modals allow-forms allow-same-origin" title="Live Preview"></iframe>
+            <div id="preview-empty">
+              <div class="preview-empty-icon">👁️</div>
+              <p>Open an HTML or Markdown file to see a live preview</p>
+              <p class="preview-empty-hint">The preview updates as you type</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SQL Panel -->
+        <div id="sql-panel" class="hidden">
+          <div id="sql-resize-handle"></div>
+          <div class="sql-panel-header">
+            <span class="sql-panel-title">SQL</span>
+            <div class="sql-panel-actions">
+              <select id="sql-db-select" title="Select Database">
+                <option value="">No Database</option>
+              </select>
+              <button class="icon-btn" id="btn-sql-new-db" title="New Database">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1v6H2v2h6v6h2V9h6V7H10V1z"/></svg>
+              </button>
+              <button class="icon-btn" id="btn-sql-open-db" title="Open .db File">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M1 3.5A1.5 1.5 0 012.5 2h2.764c.958 0 1.76.56 2.311 1.184C7.985 3.648 8.48 4 9 4h4.5A1.5 1.5 0 0115 5.5v7a1.5 1.5 0 01-1.5 1.5h-11A1.5 1.5 0 011 12.5v-9z"/></svg>
+              </button>
+              <button class="icon-btn" id="btn-sql-save-db" title="Export Database">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M7.646 11.854a.5.5 0 00.708 0l3-3a.5.5 0 00-.708-.708L8.5 10.293V1.5a.5.5 0 00-1 0v8.793L5.354 8.146a.5.5 0 10-.708.708l3 3z"/></svg>
+              </button>
+              <button class="icon-btn" id="btn-close-sql" title="Close SQL Panel">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 01.708 0L8 7.293l2.646-2.647a.5.5 0 01.708.708L8.707 8l2.647 2.646a.5.5 0 01-.708.708L8 8.707l-2.646 2.647a.5.5 0 01-.708-.708L7.293 8 4.646 5.354a.5.5 0 010-.708z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="sql-toolbar">
+            <button class="sql-execute-btn" id="btn-sql-execute" title="Execute Query (Ctrl+Shift+Enter)">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M11.596 8.697l-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 010 1.393z"/></svg>
+              Run
+            </button>
+            <button class="icon-btn" id="btn-sql-history" title="Query History" style="position:relative;">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8.515 1.019A7 7 0 008 1V0a8 8 0 01.589.022l-.074.997zm2.004.45a7.003 7.003 0 00-.985-.299l.219-.976c.383.086.76.2 1.126.342l-.36.933zm1.37.71a7.01 7.01 0 00-.439-.27l.493-.87a8.025 8.025 0 01.979.654l-.615.789a6.996 6.996 0 00-.418-.302zm1.834 1.79a6.99 6.99 0 00-.653-.796l.724-.69c.27.285.52.59.747.91l-.818.576zm.744 1.352a7.08 7.08 0 00-.214-.468l.893-.45a7.976 7.976 0 01.45 1.088l-.95.313a7.023 7.023 0 00-.179-.483zm.53 2.507a6.991 6.991 0 00-.1-1.025l.985-.17c.067.386.106.778.116 1.17l-1 .025zm-.131 1.538c.033-.17.06-.339.081-.51l.993.123a7.957 7.957 0 01-.23 1.155l-.964-.267c.046-.165.086-.332.12-.501zm-.952 2.379c.184-.29.346-.594.486-.908l.914.405c-.16.36-.345.706-.555 1.038l-.845-.535zm-.964 1.205c.122-.122.239-.248.35-.378l.758.653a8.073 8.073 0 01-.401.432l-.707-.707z"/><path d="M8 1a7 7 0 104.95 11.95l.707.707A8.001 8.001 0 118 0v1z"/><path d="M7.5 3a.5.5 0 01.5.5v5.21l3.248 1.856a.5.5 0 01-.496.868l-3.5-2A.5.5 0 017 9V3.5a.5.5 0 01.5-.5z"/></svg>
+              <div class="sql-history-dropdown" id="sql-history-dropdown"></div>
+            </button>
+            <span class="sql-status" id="sql-status">Ready</span>
+          </div>
+          <div class="sql-content">
+            <div class="sql-schema" id="sql-schema">
+              <div class="sql-schema-header">
+                <span>Tables</span>
+                <button class="icon-btn" id="btn-sql-refresh-schema" title="Refresh Schema">
+                  <svg width="10" height="10" viewBox="0 0 16 16" fill="currentColor"><path d="M11.534 7h3.932a.25.25 0 01.192.41l-1.966 2.36a.25.25 0 01-.384 0l-1.966-2.36a.25.25 0 01.192-.41zm-11 2h3.932a.25.25 0 00.192-.41L2.692 6.23a.25.25 0 00-.384 0L.342 8.59A.25.25 0 00.534 9z"/><path d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 11-.771-.636A6.002 6.002 0 0113.917 7H12.9A5.002 5.002 0 008 3zM3.1 9a5.002 5.002 0 008.757 2.182.5.5 0 11.771.636A6.002 6.002 0 012.083 9H3.1z"/></svg>
+                </button>
+              </div>
+              <div class="sql-schema-tree" id="sql-schema-tree">
+                <div class="sql-schema-empty">No tables</div>
+              </div>
+            </div>
+            <div class="sql-results" id="sql-results">
+              <div class="sql-results-empty" id="sql-results-empty">
+                <div class="sql-results-empty-icon">🗃️</div>
+                <p>Run a query to see results</p>
+                <p class="sql-results-hint">Ctrl+Shift+Enter to execute</p>
+              </div>
+              <div class="sql-results-table-wrap" id="sql-results-table-wrap" style="display:none;">
+                <table class="sql-results-table" id="sql-results-table">
+                  <thead id="sql-results-thead"></thead>
+                  <tbody id="sql-results-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="sql-footer" id="sql-footer">
+            <span id="sql-row-count"></span>
+            <span id="sql-exec-time"></span>
+            <span id="sql-error" class="sql-error-text"></span>
+          </div>
+        </div>
+
+        <!-- AI Panel -->
+        <div id="ai-panel" class="hidden">
+          <div id="ai-panel-resize-handle"></div>
+          <div class="ai-panel-header">
+            <span class="ai-panel-title">AI Assistant</span>
+            <div class="ai-panel-actions">
+              <select id="ai-provider-select" title="Select AI Provider">
+                <option value="">Select Provider...</option>
+                <option value="openai">OpenAI</option>
+                <option value="claude">Claude</option>
+                <option value="gemini">Gemini</option>
+                <option value="perplexity">Perplexity</option>
+              </select>
+              <button class="icon-btn" id="btn-clear-chat" title="Clear Chat">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+              </button>
+              <button class="icon-btn" id="btn-close-ai" title="Close AI Panel">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 01.708 0L8 7.293l2.646-2.647a.5.5 0 01.708.708L8.707 8l2.647 2.646a.5.5 0 01-.708.708L8 8.707l-2.646 2.647a.5.5 0 01-.708-.708L7.293 8 4.646 5.354a.5.5 0 010-.708z"/></svg>
+              </button>
+            </div>
+          </div>
+          <div id="ai-chat-messages">
+            <div class="ai-welcome">
+              <div class="ai-welcome-icon">🤖</div>
+              <h3>AI Assistant</h3>
+              <p>Ask questions about your code, request edits, or get help debugging.</p>
+              <p class="ai-welcome-hint">Configure your API key in Settings (Ctrl+,)</p>
+            </div>
+          </div>
+          <div id="ai-chat-input-area">
+            <div class="ai-context-bar" id="ai-context-bar" style="display:none;">
+              <span class="ai-context-label">Context:</span>
+              <span class="ai-context-text" id="ai-context-text"></span>
+              <button class="ai-context-clear" id="ai-context-clear">&times;</button>
+            </div>
+            <div class="ai-input-wrapper">
+              <textarea id="ai-chat-input" placeholder="Ask AI anything... (Enter to send)" rows="1"></textarea>
+              <button id="ai-send-btn" title="Send Message">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M15.854 8.354a.5.5 0 000-.708l-3-3a.5.5 0 00-.708.708L14.293 7.5H1.5a.5.5 0 000 1h12.793l-2.147 2.146a.5.5 0 00.708.708l3-3z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terminal Panel (Bottom) -->
+      <div id="terminal-panel" class="hidden">
+        <div id="terminal-resize-handle"></div>
+        <div class="terminal-header">
+          <div class="terminal-header-left">
+            <span class="terminal-panel-title">Terminal</span>
+            <div class="terminal-tabs" id="terminal-tabs"></div>
+          </div>
+          <div class="terminal-actions">
+            <button class="icon-btn" id="btn-new-terminal" title="New Terminal">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1v6H2v2h6v6h2V9h6V7H10V1z"/></svg>
+            </button>
+            <button class="icon-btn" id="btn-close-terminal" title="Close Terminal">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M4.646 4.646a.5.5 0 01.708 0L8 7.293l2.646-2.647a.5.5 0 01.708.708L8.707 8l2.647 2.646a.5.5 0 01-.708.708L8 8.707l-2.646 2.647a.5.5 0 01-.708-.708L7.293 8 4.646 5.354a.5.5 0 010-.708z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="terminal-container-wrap" id="terminal-container"></div>
+        <div class="terminal-fallback hidden" id="terminal-fallback">
+          <div class="terminal-fallback-icon">💻</div>
+          <p>Terminal requires the Electron desktop app</p>
+          <p class="hint">Run <code>npm start</code> to launch CodeForge in Electron</p>
+        </div>
+      </div>
+
+      <!-- Status Bar -->
+      <div id="status-bar">
+        <div class="status-left">
+          <span id="status-language" class="status-item clickable" title="Select Language Mode">JavaScript</span>
+          <span id="status-encoding" class="status-item">UTF-8</span>
+        </div>
+        <div class="status-center">
+          <span id="status-message" class="status-item"></span>
+        </div>
+        <div class="status-right">
+          <span id="status-cursor" class="status-item">Ln 1, Col 1</span>
+          <span id="status-indent" class="status-item clickable">Spaces: 2</span>
+          <button class="status-item status-btn" id="btn-toggle-terminal" title="Toggle Terminal (Ctrl+J)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6 9a.5.5 0 01.5-.5h3a.5.5 0 010 1h-3A.5.5 0 016 9zM3.854 4.146a.5.5 0 10-.708.708L4.793 6.5 3.146 8.146a.5.5 0 10.708.708l2-2a.5.5 0 000-.708l-2-2z"/><path d="M2 1a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V3a2 2 0 00-2-2H2zm12 1a1 1 0 011 1v10a1 1 0 01-1 1H2a1 1 0 01-1-1V3a1 1 0 011-1h12z"/></svg>
+            <span>Terminal</span>
+          </button>
+          <button class="status-item status-btn" id="btn-toggle-preview" title="Toggle Preview (Ctrl+P)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M10.5 8a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/><path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7z"/></svg>
+            <span>Preview</span>
+          </button>
+          <button class="status-item status-btn" id="btn-toggle-sql" title="Toggle SQL Panel (Ctrl+Shift+Q)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M12.5 16a3.5 3.5 0 100-7 3.5 3.5 0 000 7zM11 2a1 1 0 011-1h2a1 1 0 011 1v12.5A4.5 4.5 0 0110.5 10a.5.5 0 010 1 3.5 3.5 0 103.5 3.5V2h-2v3.17a3.001 3.001 0 01-.284 5.98A3 3 0 019 8.17V2H7v3.17a3.001 3.001 0 01-.284 5.98A3 3 0 014 8.17V2H2v10.5a.5.5 0 01-1 0V2a1 1 0 011-1h2a1 1 0 011 1v6.17a2.001 2.001 0 10.178 0V2h2v6.17a2.001 2.001 0 10.178 0V2H11z"/></svg>
+            <span>SQL</span>
+          </button>
+          <button class="status-item status-btn" id="btn-toggle-ai" title="Toggle AI Panel (Ctrl+L)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M6 12.5a.5.5 0 01.5-.5h3a.5.5 0 010 1h-3a.5.5 0 01-.5-.5zM3 8.062C3 6.76 4.235 5.765 5.53 5.886a26.58 26.58 0 004.94 0C11.765 5.765 13 6.76 13 8.062v1.157a.933.933 0 01-.765.935c-.845.147-2.34.346-4.235.346-1.895 0-3.39-.2-4.235-.346A.933.933 0 013 9.219V8.062zm4.542-.827a.25.25 0 00-.217.068l-.92.9a25.11 25.11 0 01-1.871-.183.25.25 0 00-.068.495c.55.076 1.232.149 2.02.193a.25.25 0 00.189-.071l.754-.736.847 1.71a.25.25 0 00.404.062l.932-.97a25.286 25.286 0 001.922-.188.25.25 0 00-.068-.495c-.538.074-1.207.145-1.98.189a.25.25 0 00-.166.076l-.754.785-.842-1.7a.25.25 0 00-.182-.135z"/><path d="M8.5 1.866a1 1 0 10-1 0V3h-2A4.5 4.5 0 001 7.5V8a1 1 0 001 1v2a2 2 0 002 2h8a2 2 0 002-2V9a1 1 0 001-1v-.5A4.5 4.5 0 0010.5 3h-2V1.866zM14 7.5V13a1 1 0 01-1 1H3a1 1 0 01-1-1V7.5A3.5 3.5 0 015.5 4h5A3.5 3.5 0 0114 7.5z"/></svg>
+            <span>AI</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content settings-content">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="modal-close" id="settings-close">&times;</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-sidebar">
+          <div class="settings-nav-item active" data-section="api-keys">API Keys</div>
+          <div class="settings-nav-item" data-section="editor">Editor</div>
+          <div class="settings-nav-item" data-section="database">Database</div>
+          <div class="settings-nav-item" data-section="terminal">Terminal</div>
+          <div class="settings-nav-item" data-section="theme">Theme</div>
+          <div class="settings-nav-item" data-section="about">About</div>
+        </div>
+        <div class="settings-main">
+          <!-- API Keys Section -->
+          <div class="settings-section active" id="section-api-keys">
+            <h3>AI Provider API Keys</h3>
+            <p class="settings-desc">Enter your API keys to enable AI-assisted code editing. Keys are stored locally in your browser.</p>
+
+            <div class="api-key-group">
+              <label for="key-openai">
+                <span class="provider-icon">🟢</span> OpenAI
+                <a href="https://platform.openai.com/api-keys" target="_blank" class="key-link">Get API Key</a>
+              </label>
+              <div class="key-input-wrap">
+                <input type="password" id="key-openai" placeholder="sk-..." autocomplete="off">
+                <button class="key-toggle" data-target="key-openai">👁</button>
+              </div>
+              <div class="model-select-wrap">
+                <label for="model-openai">Model:</label>
+                <select id="model-openai">
+                  <option value="gpt-4o">GPT-4o</option>
+                  <option value="gpt-4o-mini">GPT-4o Mini</option>
+                  <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                  <option value="o1-mini">o1-mini</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="api-key-group">
+              <label for="key-claude">
+                <span class="provider-icon">🟠</span> Claude (Anthropic)
+                <a href="https://console.anthropic.com/settings/keys" target="_blank" class="key-link">Get API Key</a>
+              </label>
+              <div class="key-input-wrap">
+                <input type="password" id="key-claude" placeholder="sk-ant-..." autocomplete="off">
+                <button class="key-toggle" data-target="key-claude">👁</button>
+              </div>
+              <div class="model-select-wrap">
+                <label for="model-claude">Model:</label>
+                <select id="model-claude">
+                  <option value="claude-sonnet-4-20250514">Claude Sonnet 4</option>
+                  <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5</option>
+                  <option value="claude-opus-4-20250514">Claude Opus 4</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="api-key-group">
+              <label for="key-gemini">
+                <span class="provider-icon">🔵</span> Gemini (Google)
+                <a href="https://aistudio.google.com/app/apikey" target="_blank" class="key-link">Get API Key</a>
+              </label>
+              <div class="key-input-wrap">
+                <input type="password" id="key-gemini" placeholder="AI..." autocomplete="off">
+                <button class="key-toggle" data-target="key-gemini">👁</button>
+              </div>
+              <div class="model-select-wrap">
+                <label for="model-gemini">Model:</label>
+                <select id="model-gemini">
+                  <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                  <option value="gemini-2.0-pro">Gemini 2.0 Pro</option>
+                  <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="api-key-group">
+              <label for="key-perplexity">
+                <span class="provider-icon">🟣</span> Perplexity
+                <a href="https://www.perplexity.ai/settings/api" target="_blank" class="key-link">Get API Key</a>
+              </label>
+              <div class="key-input-wrap">
+                <input type="password" id="key-perplexity" placeholder="pplx-..." autocomplete="off">
+                <button class="key-toggle" data-target="key-perplexity">👁</button>
+              </div>
+              <div class="model-select-wrap">
+                <label for="model-perplexity">Model:</label>
+                <select id="model-perplexity">
+                  <option value="sonar-pro">Sonar Pro</option>
+                  <option value="sonar">Sonar</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="settings-actions">
+              <button class="btn btn-primary" id="btn-save-keys">Save API Keys</button>
+              <button class="btn btn-danger" id="btn-clear-keys">Clear All Keys</button>
+            </div>
+          </div>
+
+          <!-- Editor Section -->
+          <div class="settings-section" id="section-editor">
+            <h3>Editor Settings</h3>
+            <div class="setting-row">
+              <label>Font Size</label>
+              <input type="number" id="setting-font-size" value="14" min="10" max="30">
+            </div>
+            <div class="setting-row">
+              <label>Tab Size</label>
+              <select id="setting-tab-size">
+                <option value="2">2 Spaces</option>
+                <option value="4">4 Spaces</option>
+                <option value="8">8 Spaces</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <label>Word Wrap</label>
+              <input type="checkbox" id="setting-word-wrap">
+            </div>
+            <div class="setting-row">
+              <label>Show Minimap</label>
+              <input type="checkbox" id="setting-minimap" checked>
+            </div>
+            <div class="setting-row">
+              <label>Line Numbers</label>
+              <input type="checkbox" id="setting-line-numbers" checked>
+            </div>
+            <div class="setting-row">
+              <label>Auto-Save</label>
+              <input type="checkbox" id="setting-auto-save" checked>
+            </div>
+            <div class="settings-actions">
+              <button class="btn btn-primary" id="btn-save-editor-settings">Save Settings</button>
+            </div>
+          </div>
+
+          <!-- Database Section -->
+          <div class="settings-section" id="section-database">
+            <h3>Database Settings</h3>
+            <p class="settings-desc">SQLite databases run locally in your browser via WebAssembly. No server needed.</p>
+            <div class="setting-row">
+              <label>Auto-load saved databases</label>
+              <input type="checkbox" id="setting-db-autoload" checked>
+            </div>
+            <div class="setting-row">
+              <label>Max results per query</label>
+              <input type="number" id="setting-db-max-results" value="1000" min="100" max="50000">
+            </div>
+            <div class="setting-row">
+              <label>Query history limit</label>
+              <input type="number" id="setting-db-history-limit" value="50" min="10" max="500">
+            </div>
+            <h4 style="margin-top:16px;color:var(--text-secondary);font-size:13px;">Saved Databases</h4>
+            <div id="saved-databases-list" class="saved-db-list">
+              <p class="settings-desc">No saved databases</p>
+            </div>
+            <div class="settings-actions">
+              <button class="btn btn-primary" id="btn-save-db-settings">Save Settings</button>
+            </div>
+          </div>
+
+          <!-- Terminal Section -->
+          <div class="settings-section" id="section-terminal">
+            <h3>Terminal Settings</h3>
+            <p class="settings-desc">Configure the built-in terminal. Requires the Electron desktop app.</p>
+            <div class="setting-row">
+              <label>Shell</label>
+              <select id="setting-terminal-shell">
+                <option value="default">Default (System Shell)</option>
+                <option value="powershell">PowerShell</option>
+                <option value="cmd">Command Prompt</option>
+                <option value="bash">Bash</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <label>Font Size</label>
+              <input type="number" id="setting-terminal-font-size" value="13" min="8" max="24">
+            </div>
+            <div class="setting-row">
+              <label>Cursor Style</label>
+              <select id="setting-terminal-cursor">
+                <option value="block">Block</option>
+                <option value="underline">Underline</option>
+                <option value="bar">Bar</option>
+              </select>
+            </div>
+            <div class="settings-actions">
+              <button class="btn btn-primary" id="btn-save-terminal-settings">Save Settings</button>
+            </div>
+          </div>
+
+          <!-- Theme Section -->
+          <div class="settings-section" id="section-theme">
+            <h3>Theme</h3>
+            <div class="theme-grid">
+              <div class="theme-card active" data-theme="monokai">
+                <div class="theme-preview monokai-preview"></div>
+                <span>Monokai</span>
+              </div>
+              <div class="theme-card" data-theme="dracula">
+                <div class="theme-preview dracula-preview"></div>
+                <span>Dracula</span>
+              </div>
+              <div class="theme-card" data-theme="one-dark">
+                <div class="theme-preview one-dark-preview"></div>
+                <span>One Dark</span>
+              </div>
+              <div class="theme-card" data-theme="github-dark">
+                <div class="theme-preview github-dark-preview"></div>
+                <span>GitHub Dark</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- About Section -->
+          <div class="settings-section" id="section-about">
+            <h3>About CodeForge</h3>
+            <div class="about-content">
+              <p class="about-logo">⚡ CodeForge v1.0</p>
+              <p>A clean, modern code editor with AI assistance.</p>
+              <p>Built with CodeMirror 6 and vanilla JavaScript.</p>
+              <hr>
+              <h4>Keyboard Shortcuts</h4>
+              <div class="shortcuts-list">
+                <div><kbd>Ctrl+N</kbd> New File</div>
+                <div><kbd>Ctrl+O</kbd> Open File</div>
+                <div><kbd>Ctrl+S</kbd> Save File</div>
+                <div><kbd>Ctrl+W</kbd> Close Tab</div>
+                <div><kbd>Ctrl+Shift+P</kbd> Command Palette</div>
+                <div><kbd>Ctrl+L</kbd> Toggle AI Panel</div>
+                <div><kbd>Ctrl+K</kbd> AI Edit Selection</div>
+                <div><kbd>Ctrl+,</kbd> Settings</div>
+                <div><kbd>Ctrl+P</kbd> Toggle Preview</div>
+                <div><kbd>Ctrl+Shift+Q</kbd> Toggle SQL Panel</div>
+                <div><kbd>Ctrl+Shift+Enter</kbd> Execute SQL</div>
+                <div><kbd>Ctrl+J</kbd> Toggle Terminal</div>
+                <div><kbd>Ctrl+B</kbd> Toggle Sidebar</div>
+                <div><kbd>Ctrl+Tab</kbd> Next Tab</div>
+                <div><kbd>Ctrl+Shift+Tab</kbd> Previous Tab</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Command Palette -->
+  <div id="command-palette" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="palette-content">
+      <input type="text" id="palette-input" placeholder="Type a command..." autocomplete="off">
+      <div id="palette-results"></div>
+    </div>
+  </div>
+
+  <!-- Language Selector -->
+  <div id="language-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="palette-content">
+      <input type="text" id="language-input" placeholder="Select language mode..." autocomplete="off">
+      <div id="language-results"></div>
+    </div>
+  </div>
+
+  <!-- Context Menu -->
+  <div id="context-menu" class="hidden">
+    <div class="context-item" data-action="ai-explain">🤖 AI: Explain Code</div>
+    <div class="context-item" data-action="ai-improve">✨ AI: Improve Code</div>
+    <div class="context-item" data-action="ai-fix">🔧 AI: Fix Bugs</div>
+    <div class="context-item" data-action="ai-comment">📝 AI: Add Comments</div>
+    <div class="context-separator"></div>
+    <div class="context-item" data-action="sql-execute">🗃️ Execute as SQL</div>
+    <div class="context-separator"></div>
+    <div class="context-item" data-action="format">Format Selection</div>
+    <div class="context-item" data-action="copy">Copy</div>
+    <div class="context-item" data-action="cut">Cut</div>
+    <div class="context-item" data-action="paste">Paste</div>
+  </div>
+
+  <!-- New File Dialog -->
+  <div id="new-file-modal" class="modal hidden">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content small-modal">
+      <div class="modal-header">
+        <h2>New File</h2>
+        <button class="modal-close" id="new-file-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <label for="new-file-name">File Name:</label>
+        <input type="text" id="new-file-name" placeholder="untitled.js" autocomplete="off">
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="btn-create-file">Create</button>
+          <button class="btn" id="btn-cancel-file">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div id="toast-container"></div>
+
+  <!-- Hidden file input -->
+  <input type="file" id="db-file-input" accept=".db,.sqlite,.sqlite3" style="display:none">
+  <input type="file" id="file-input" multiple accept=".js,.jsx,.ts,.tsx,.py,.rb,.go,.rs,.c,.cpp,.h,.hpp,.java,.kt,.swift,.php,.html,.htm,.css,.scss,.less,.json,.xml,.yaml,.yml,.md,.txt,.sql,.sh,.bash,.ps1,.bat,.vue,.svelte,.astro,.toml,.ini,.cfg,.env,.gitignore,.dockerfile,.csv,.log" style="display:none">
+
+  <!-- Scripts -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

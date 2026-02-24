@@ -1,0 +1,71 @@
+{
+  "name": "codeforge",
+  "version": "1.0.0",
+  "description": "CodeForge — AI-Powered Code Editor",
+  "main": "main.js",
+  "author": "CodeForge",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:portable": "electron-builder --win portable",
+    "serve": "npx serve -s ."
+  },
+  "devDependencies": {
+    "electron": "^33.4.11",
+    "electron-builder": "^25.1.8",
+    "serve": "^14.2.5"
+  },
+  "build": {
+    "appId": "com.codeforge.editor",
+    "productName": "CodeForge",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist/**",
+      "!node_modules/.cache/**"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "icon.ico",
+      "signAndEditExecutable": false
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "icon.png",
+      "category": "public.app-category.developer-tools",
+      "artifactName": "CodeForge-Setup.${ext}"
+    },
+    "dmg": {
+      "title": "CodeForge",
+      "iconSize": 80,
+      "contents": [
+        { "x": 170, "y": 170 },
+        { "x": 430, "y": 170, "type": "link", "path": "/Applications" }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CodeForge"
+    }
+  }
+}
